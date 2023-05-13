@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dynamic Text Example</title>
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS_HTML"></script>
+
+        <style>
+            .inline-math {
+                display: inline !important;
+            }
+            #MathJax_Font_Test {
+                font-size: 16px !important;
+            }
+        </style>
+
+    </head>
+    <body>
+        <label for="input">Enter some text:</label>
+        <textarea id="input"></textarea>
+        <p id="output"> <span id="math-output"></span></p>
+
+        <script>
+            var inputElem = document.getElementById("input");
+            var outputElem = document.getElementById("output");
+            var prevInput = inputElem.value;
+            var prevOutput = "";
+
+            function updateOutput() {
+                var input = inputElem.value;
+                if (input !== prevInput) {
+                    // Replace $$ with <script> tags
+                    input = input.replace(/\$\$(.*?)\$\$/g, '<script type="math/tex">$1<\/script>');
+
+                    // Render the updated output only if it has changed
+                    if (input !== prevOutput) {
+                        outputElem.innerHTML = input;
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, outputElem]);
+                        prevOutput = input;
+                    }
+
+                    prevInput = input;
+                }
+
+                // Check again in 100ms
+                setTimeout(updateOutput, 100);
+            }
+
+            // Start updating the output
+            updateOutput();
+        </script>
+    </body>
+</html>
